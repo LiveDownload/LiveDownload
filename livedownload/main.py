@@ -27,7 +27,7 @@ def download(downloader: Type[BaseDownloader], link: str, path: Path,
     path.parent.mkdir(parents=True, exist_ok=True)
 
     logger = logging.getLogger(__name__)
-    logger.info(f"文件 {name} 开始下载")
+    logger.info(f"文件 {path.name} 开始下载")
     down = downloader(link, path)
     return pool.apply_async(down.start, callback=callback)
 

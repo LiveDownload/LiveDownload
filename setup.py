@@ -11,7 +11,7 @@ setup(
     keywords=['LiveDownload', 'bilibili'],
     license='GNU General Public License v3',
     description='',
-    version='1.1',
+    version='1.1.1',
     packages=find_packages(),
     url='https://github.com/LiveDownload/LiveDownload',
     python_requires='>=3.6',
