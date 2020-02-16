@@ -10,7 +10,7 @@ class AioDown(BaseDownloader):
     async def download(self) -> str:
         logger = logging.getLogger(__name__)
         try:
-            file = open(self.name, 'wb')
+            file = open(self.path, 'wb')
             async with aiohttp.ClientSession(headers=self.HEADERS, timeout=aiohttp.ClientTimeout()) as session:
                 async with session.get(self.link) as response:
                     while True:
@@ -22,7 +22,7 @@ class AioDown(BaseDownloader):
             file.close()
         except Exception as e:
             logger.error(e)
-        return self.name
+        return self.path.name
 
     def start(self) -> str:
         loop = asyncio.new_event_loop()

@@ -4,6 +4,7 @@ import asyncio
 import multiprocessing
 import time
 import logging
+from pathlib import Path
 from multiprocessing.pool import ApplyResult
 from colorlog import ColoredFormatter
 from typing import Set, Type, Callable, Optional
@@ -14,15 +15,18 @@ from .downloader import BaseDownloader
 from .downloader.aiodown import AioDown
 
 
-def download(downloader: Type[BaseDownloader], link: str, name: str,
+def download(downloader: Type[BaseDownloader], link: str, path: Path,
              callback: Callable[[], None]) -> ApplyResult:
     symbols = r"[\/\\\:\*\?\"\<\>\|]"  # '/ \ : * ? " < > |'
+    name = path.name
     for symbol in symbols:
         name = name.replace(symbol, '-')
+    path = path.with_name(name)
+    path.parent.mkdir(parents=True, exist_ok=True)
 
     logger = logging.getLogger(__name__)
     logger.info(f"文件 {name} 开始下载")
-    down = downloader(link, name)
+    down = downloader(link, path)
     return pool.apply_async(down.start, callback=callback)
 
 
@@ -35,13 +39,13 @@ async def add_room(room: BaseParse, downloader: Type[BaseDownloader]) -> None:
         logger.info(f"开始检测 {room} 号房间")
         link = await room.link()
         info = await room.info()
-        name = '{} - {} - {}.{}'.format(
+        path = Path('{}/{}/{}.{}'.format(
             info.uname,
+            time.strftime("%Y/%m/%d", time.localtime()),
             info.title,
-            time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
             info.suffix
-        )
-        task = download(downloader, link, name, downloaded)
+        ))
+        task = download(downloader, link, path, downloaded)
         while not (task.ready() and task.successful()):
             await asyncio.sleep(30)
 
