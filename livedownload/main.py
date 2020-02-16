@@ -22,9 +22,9 @@ def download(downloader: Type[BaseDownloader], link: str, path: Path,
     for symbol in symbols:
         name = name.replace(symbol, '-')
     path = path.with_name(name)
-    index = 1
+    index = 2
     while path.exists():
-        path = path.with_name(f"{name} - {index}")
+        path = path.with_name(f"{index} - {name}")
         index += 1
     path.parent.mkdir(parents=True, exist_ok=True)
 
