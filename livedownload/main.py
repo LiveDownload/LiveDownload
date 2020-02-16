@@ -22,6 +22,8 @@ def download(downloader: Type[BaseDownloader], link: str, path: Path,
     for symbol in symbols:
         name = name.replace(symbol, '-')
     path = path.with_name(name)
+    while path.exists():
+        path = path.with_name('new ' + path.name)
     path.parent.mkdir(parents=True, exist_ok=True)
 
     logger = logging.getLogger(__name__)
