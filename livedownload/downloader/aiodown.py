@@ -22,7 +22,7 @@ class AioDown(BaseDownloader):
             file.close()
         except Exception as e:
             logger.error(e)
-        return self.path.name
+        return self.path
 
     def start(self) -> str:
         loop = asyncio.new_event_loop()

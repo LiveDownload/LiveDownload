@@ -22,12 +22,14 @@ def download(downloader: Type[BaseDownloader], link: str, path: Path,
     for symbol in symbols:
         name = name.replace(symbol, '-')
     path = path.with_name(name)
+    index = 1
     while path.exists():
-        path = path.with_name('new ' + path.name)
+        path = path.with_name(f"{name} - {index}")
+        index += 1
     path.parent.mkdir(parents=True, exist_ok=True)
 
     logger = logging.getLogger(__name__)
-    logger.info(f"文件 {path.name} 开始下载")
+    logger.info(f"文件 {path} 开始下载")
     down = downloader(link, path)
     return pool.apply_async(down.start, callback=callback)
 
