@@ -36,6 +36,11 @@ def download(downloader: Type[BaseDownloader], link: str, path: Path,
 
 async def add_room(room: BaseParse, downloader: Type[BaseDownloader]) -> None:
     def downloaded(filename):
+        file = Path(filename)
+        if not file.stat().st_size:
+            file.unlink()
+            logger.error(f"{filename} 文件为空，下载失败")
+            return
         logger.info(f"{filename} 房间下载完成")
 
     logger = logging.getLogger(__name__)
